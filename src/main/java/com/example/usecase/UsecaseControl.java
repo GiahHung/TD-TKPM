@@ -19,15 +19,13 @@ public class UsecaseControl implements InputBoundary{
         for (Product product : listProduct) {
             int maMh = product.getMaMh();
             String name = product.getName();
-            double price = product.getPrice();
+            int price = product.getPrice();
             String category = product.getCategory();
             int quantity = product.getQuantity();
             String dvt = product.getDvt();
             ViewProductDTO viewProductDTO = new ViewProductDTO(name, price, maMh, quantity, dvt, category);
             DTO.add(viewProductDTO);
         }
-        // ResponseData res = new ResponseData();
-        // res.setProductList(listProduct);
         output.present(DTO);
     }
 }

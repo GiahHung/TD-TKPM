@@ -17,4 +17,13 @@ public class FoodProduct extends Product{
     public Date getNSX() { return nSX; }
     public Date getHSD() { return hSD; }
     public String getNhaCungCap() { return nhaCungCap; }
+
+    @Override
+    public int totalQuantity(List<Product> productData) {
+        int totalQuantity = 0;
+        for (Product product : productData) {
+            totalQuantity += product.getQuantity();
+        }
+        return totalQuantity;
+    }
 }

@@ -4,13 +4,13 @@ package com.example.usecase;
 public class ViewProductDTO {
     
     private String name;
-    private double price;
+    private int price;
     private int maMh;
     private int quantity;
     private String dvt;
     private String category;
    
-    public ViewProductDTO(String name, double price, int maMh, int quantity, String dvt, String category) {
+    public ViewProductDTO(String name, int price, int maMh, int quantity, String dvt, String category) {
         this.name = name;
         this.price = price;
         this.maMh = maMh;
@@ -24,7 +24,7 @@ public class ViewProductDTO {
         return name;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 

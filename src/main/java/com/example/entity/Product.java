@@ -1,5 +1,7 @@
 package com.example.entity;
 
+import java.util.List;
+
 public abstract class Product {
     private int maMh; 
     private String name; 
@@ -17,10 +19,10 @@ public abstract class Product {
         this.dvt = dvt;
     }
 
-    // Getters and other methods
+public abstract int totalQuantity(List<Product> productData);
     public int getMaMh() { return maMh; }
     public String getName() { return name; }
-    public double getPrice() { return price; }
+    public int getPrice() { return price; }
     public String getCategory() { return category; }
     public int getQuantity() { return quantity; }
     public String getDvt() {

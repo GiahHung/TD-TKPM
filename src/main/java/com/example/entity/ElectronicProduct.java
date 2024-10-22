@@ -1,5 +1,7 @@
 package com.example.entity;
 
+import java.util.List;
+
 public class ElectronicProduct extends Product{
     private String baoHanh; // Warranty period
     private String congSuat; // Power rating
@@ -14,4 +16,13 @@ public class ElectronicProduct extends Product{
     // Getters
     public String getBaoHanh() { return baoHanh; }
     public String getCongSuat() { return congSuat; }
+
+    @Override
+    public int totalQuantity(List<Product> productData) {
+        int totalQuantity = 0;
+        for (Product product : productData) {
+            totalQuantity += product.getQuantity();
+        }
+        return totalQuantity;
+    }
 }
