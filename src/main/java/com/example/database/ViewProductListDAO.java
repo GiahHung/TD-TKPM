@@ -65,8 +65,8 @@ public class ViewProductListDAO implements DataBaseBoundary {
                             resultSet.getString("categoryKey"),
                             resultSet.getInt("SL"),
                             resultSet.getString("DVT"),
-                            resultSet.getString("BH"),
-                            resultSet.getString("congSuat")
+                            resultSet.getInt("BH"),
+                            resultSet.getInt("congSuat")
                         ));
                         break;
 

@@ -55,11 +55,11 @@ public class AddProductDAO implements AddDatabaseBoundary {
                 ElectronicProduct electronicProduct = (ElectronicProduct) product;
                 pstmt.setNull(6, java.sql.Types.DATE);
                 pstmt.setNull(7, java.sql.Types.DATE); 
-                pstmt.setString(8, electronicProduct.getBaoHanh());              
+                pstmt.setInt(8, electronicProduct.getBaoHanh());              
                 pstmt.setNull(9, java.sql.Types.VARCHAR); 
                 pstmt.setNull(10, java.sql.Types.VARCHAR);
                 pstmt.setNull(11, java.sql.Types.DATE);
-                pstmt.setString(12, electronicProduct.getCongSuat()); 
+                pstmt.setInt(12, electronicProduct.getCongSuat()); 
                 
             }
 
@@ -110,8 +110,8 @@ public class AddProductDAO implements AddDatabaseBoundary {
                         product = new CeramicsProduct(newProductId, name, price, category, quantity, dvt, ngayNhapKho, nhaSanXuat);
                         System.out.println(name);
                     } else if (category.equalsIgnoreCase("electronic")) {
-                        String baoHanh = rs.getString("BH");
-                        String congSuat = rs.getString("congSuat");
+                        int baoHanh = rs.getInt("BH");
+                        int congSuat = rs.getInt("congSuat");
                         product = new ElectronicProduct(newProductId, name, price, category, quantity, dvt, baoHanh, congSuat);
                         System.out.println(name);
                     }

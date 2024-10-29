@@ -16,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import com.example.usecase.findProduct.FindProductOutputDTO;
 
 public class FindProductForm {
- public  void createAndShowGUI(List<FindProductOutputDTO> products) {
+ public  void ShowGUI(List<FindProductOutputDTO> products) {
         JFrame frame = new JFrame("Student Management");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(900, 500);

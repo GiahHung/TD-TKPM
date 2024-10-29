@@ -15,7 +15,7 @@ public class DeleteTest {
           DeleteProductPresenter deleteProductPresenter = new DeleteProductPresenter();
           DeleteUsecase deleteUsecase = new DeleteUsecase(deleteProductPresenter, deleteProductDAO);
 
-          DeleteInputDTO deleteInputDTO = new DeleteInputDTO(23, "fff", 23000000, "electronic", 10, "xc", "1", "1");
+          DeleteInputDTO deleteInputDTO = new DeleteInputDTO(32, "Máy lạnh", 23000000, "electronic", 10, "xc", 1, 100);
 
           deleteUsecase.execute(deleteInputDTO);
 

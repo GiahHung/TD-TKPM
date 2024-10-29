@@ -45,7 +45,7 @@ public class UpdateUsecase implements UpdateInputBoundary {
 
         } else if (category.equals("electronic")) {
             // Validate for electronic category
-            if (validatePrice(price) && validateQuantity(quantity)) {
+            if (validatePrice(price) && validateQuantity(quantity) && valiateBH(inputDTO.getBaoHanh()) && valiateCongSuat(inputDTO.getCongSuat())) {
                 product = new ElectronicProduct(maMh, name, price, category, quantity, dvt, inputDTO.getBaoHanh(), inputDTO.getCongSuat());
             } else {
                 outputError("Thông tin không hợp lệ");
@@ -95,5 +95,13 @@ public class UpdateUsecase implements UpdateInputBoundary {
 
     private boolean validatePrice(double price) {
         return price > 0;
+    }
+
+    private boolean valiateBH(int BH){
+        return BH >= 0;
+    }
+
+    private boolean valiateCongSuat(int congSuat){
+        return congSuat > 0;
     }
 }

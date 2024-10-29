@@ -52,7 +52,7 @@ public class AddUseCase implements AddInputBoundary{
             
 
         }else if(category.equals("electronic")  ){
-            if(valiateTien(price) && valiateSL(quantity)){
+            if(valiateTien(price) && valiateSL(quantity) && valiateBH(addInputDTO.getBaoHanh()) && valiateCongSuat(addInputDTO.getCongSuat()) ){
                 product = new ElectronicProduct(maMh, name, price, category, quantity, dvt, 
             addInputDTO.getBaoHanh(), addInputDTO.getCongSuat());
             }else{
@@ -84,8 +84,16 @@ public class AddUseCase implements AddInputBoundary{
     private boolean valiateSL(int quantity){
         return quantity >= 0;
     }
-    private boolean valiateTien(double price){
+    private boolean valiateTien(int price){
         return price > 0;
+    }
+
+    private boolean valiateBH(int BH){
+        return BH >= 0;
+    }
+
+    private boolean valiateCongSuat(int congSuat){
+        return congSuat > 0;
     }
 
 

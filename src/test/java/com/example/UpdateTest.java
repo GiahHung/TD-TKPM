@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.example.database.UpdateProductDAO;
 import com.example.ui.updateProduct.UpdatePresenter;
+import com.example.usecase.updateProduct.ResponeData;
 import com.example.usecase.updateProduct.UpdateInputDTO;
 
 import com.example.usecase.updateProduct.UpdateOutputDTO;
@@ -31,7 +32,7 @@ public class UpdateTest {
       Date date2 = cal2.getTime();
   
       // Creating input DTO for updating the product
-      UpdateInputDTO updateInputDTO = new UpdateInputDTO(30, "tương cà", 45000, "food", 20, "chai", date1, date2, "Chin-su");
+      UpdateInputDTO updateInputDTO = new UpdateInputDTO(30, "cccc", 10000, "food", 20, "chai", date1, date2, "Chin-su");
   
       // Executing the update use case
       updateUsecase.execute(updateInputDTO);
@@ -46,7 +47,7 @@ public class UpdateTest {
   
   
       // ResponeData res = presenter.getRes();
-      // assertEquals("Not found", res.getMessage());
+      // assertEquals("Thông tin không hợp lệ", res.getMessage());
     }
   }
   

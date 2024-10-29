@@ -328,8 +328,8 @@ table.addMouseListener(new MouseAdapter() {
             addProductController.execute(addInputDTO);
 
         } else if (category.equals("electronic")) {
-            String BH = BHField.getText();
-            String congSuat = congSuatField.getText();
+            int BH = Integer.parseInt(BHField.getText());
+            int congSuat = Integer.parseInt(congSuatField.getText());
             AddInputDTO addInputDTO = new AddInputDTO(0, name, Integer.parseInt(price), category, Integer.parseInt(quantity), dvt, BH, congSuat);
             addProductController.execute(addInputDTO);
         }

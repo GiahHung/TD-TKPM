@@ -11,7 +11,7 @@ public class FindProductPresenter implements FindProductOutputBoundary {
     public void presenter(List<FindProductOutputDTO> findProductOutputDTOs) {
         this.findProductOutputDTO = findProductOutputDTOs;
         FindProductForm findProductForm = new FindProductForm();
-        findProductForm.createAndShowGUI(findProductOutputDTOs);
+        findProductForm.ShowGUI(findProductOutputDTOs);
     }
 
     public List<FindProductOutputDTO> getFindProductOutputDTOs() {

@@ -12,8 +12,8 @@ public class UpdateInputDTO {
     private Date nSX; 
     private Date hSD; 
     private String nhaCungCap;
-    private String baoHanh;
-    private String congSuat; 
+    private int baoHanh;
+    private int congSuat; 
     private String nhaSanXuat; 
     private Date ngayNhapKho;
     public UpdateInputDTO(int maMh, String name, int price, String category, int quantity, String dvt) {
@@ -36,8 +36,8 @@ public class UpdateInputDTO {
         this.nhaSanXuat = nhaSanXuat;
         this.ngayNhapKho = ngayNhapKho;
     }
-    public UpdateInputDTO(int maMh, String name, int price, String category, int quantity, String dvt, String baoHanh,
-    String congSuat) {
+    public UpdateInputDTO(int maMh, String name, int price, String category, int quantity, String dvt, int baoHanh,
+    int congSuat) {
        this(maMh, name, price, category, quantity, dvt);
         this.baoHanh = baoHanh;
         this.congSuat = congSuat;
@@ -69,10 +69,10 @@ public class UpdateInputDTO {
     public String getNhaCungCap() {
         return nhaCungCap;
     }
-    public String getBaoHanh() {
+    public int getBaoHanh() {
         return baoHanh;
     }
-    public String getCongSuat() {
+    public int getCongSuat() {
         return congSuat;
     }
     public String getNhaSanXuat() {

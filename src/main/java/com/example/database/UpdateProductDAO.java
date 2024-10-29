@@ -52,11 +52,11 @@ public class UpdateProductDAO implements UpdateDatabaseBoundary {
                 ElectronicProduct electronicProduct = (ElectronicProduct) product;
                 stmt.setNull(6, java.sql.Types.DATE);
                 stmt.setNull(7, java.sql.Types.DATE);
-                stmt.setString(8, electronicProduct.getBaoHanh());
+                stmt.setInt(8, electronicProduct.getBaoHanh());
                 stmt.setNull(9, java.sql.Types.VARCHAR);
                 stmt.setNull(10, java.sql.Types.VARCHAR);
                 stmt.setNull(11, java.sql.Types.DATE);
-                stmt.setString(12, electronicProduct.getCongSuat());
+                stmt.setInt(12, electronicProduct.getCongSuat());
             }
     
             // Execute the update and return the number of rows updated
@@ -121,8 +121,8 @@ public class UpdateProductDAO implements UpdateDatabaseBoundary {
                             product = new CeramicsProduct(mamh, name, price, category, quantity, dvt, ngayNhapKho, nhaSX);
                             break;
                         case "electronic":
-                            String baoHanh = rs.getString("BH");
-                            String congSuat = rs.getString("congSuat");
+                            int baoHanh = rs.getInt("BH");
+                            int congSuat = rs.getInt("congSuat");
                             product = new ElectronicProduct(mamh, name, price, category, quantity, dvt, baoHanh, congSuat);
                             break;
                         default:
