@@ -1,7 +1,7 @@
 package com.example.usecase.totalQuantity;
 
 public interface TotalQuantityOutputBoundary {
-void presenterFoodQuantity(int totalQuantity);
-void presenterCeramicQuantity(int totalQuantity);
-void presenterElectronicQuantity(int totalQuantity);
+void presenterFoodQuantity(TotalQuantityOutputDTO outputDTO);
+void presenterCeramicQuantity(TotalQuantityOutputDTO outputDTO);
+void presenterElectronicQuantity(TotalQuantityOutputDTO outputDTO);
 }

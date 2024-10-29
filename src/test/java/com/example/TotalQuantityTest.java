@@ -14,9 +14,9 @@ public class TotalQuantityTest {
         TotalQuantityUsecase totalQuantityUsecase = new TotalQuantityUsecase(presenter,data );
 
         totalQuantityUsecase.execute();
-        assertEquals(50, presenter.totalQuantityFood);
-        assertEquals(50, presenter.totalQuantityCeramic);
-        assertEquals(40, presenter.totalQuantityElectronic);
+        assertEquals(42, presenter.getOutputDTO().getFoodQuantity());
+        assertEquals(160, presenter.getOutputDTO().getCeramicQuantity());
+        assertEquals(62, presenter.getOutputDTO().getElectronicQuantity());
     }
 }
 

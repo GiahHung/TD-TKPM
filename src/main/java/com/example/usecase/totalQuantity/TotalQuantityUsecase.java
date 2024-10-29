@@ -14,27 +14,33 @@ public class TotalQuantityUsecase implements TotalQuantityInputBoundary {
 
     @Override
     public void execute() {
+      TotalQuantityOutputDTO outputDTO =null;
         //food
       List<Product> foodQuantityList = data.getFoodQuantityList();
       int totalQuantityFood = 0;
       for (Product product : foodQuantityList) {
-        totalQuantityFood += product.getQuantity();
+        totalQuantityFood += product.totalQuantity();
     }
-      output.presenterFoodQuantity(totalQuantityFood);
+      
+     
        //ceramic
        List<Product> ceramicQuantityList = data.getCeramicQuantityList();
        int totalQuantityCeramic = 0;
        for (Product product : ceramicQuantityList) {
-        totalQuantityCeramic += product.getQuantity();
+        totalQuantityCeramic += product.totalQuantity();
      }
-       output.presenterCeramicQuantity(totalQuantityCeramic);;
+       
+       
         //electronic
       List<Product> electronicQuantityList = data.getElectronicQuantityList();
       int totalQuantityElectronic = 0;
       for (Product product : electronicQuantityList) {
-        totalQuantityElectronic += product.getQuantity();
+        totalQuantityElectronic += product.totalQuantity();
     }
-      output.presenterElectronicQuantity(totalQuantityElectronic);;
+    outputDTO = new TotalQuantityOutputDTO(totalQuantityFood, totalQuantityCeramic, totalQuantityElectronic);
+    output.presenterFoodQuantity(outputDTO);
+    output.presenterCeramicQuantity(outputDTO);
+    output.presenterElectronicQuantity(outputDTO);
 
     }
 }

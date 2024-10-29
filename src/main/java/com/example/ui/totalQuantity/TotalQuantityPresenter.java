@@ -1,25 +1,34 @@
 package com.example.ui.totalQuantity;
 
 import com.example.usecase.totalQuantity.TotalQuantityOutputBoundary;
+import com.example.usecase.totalQuantity.TotalQuantityOutputDTO;
 
 public class TotalQuantityPresenter implements TotalQuantityOutputBoundary{
-    public int totalQuantityFood = 0;
-    public int totalQuantityCeramic = 0;
-    public int totalQuantityElectronic = 0;
+    TotalQuantityForm totalQuantityForm = null;
+    private TotalQuantityOutputDTO outputDTO = null;
     @Override
-    public void presenterFoodQuantity(int totalQuantity) {
-        this.totalQuantityFood = totalQuantity;
+    public void presenterFoodQuantity(TotalQuantityOutputDTO outputDTO) {
+        this.outputDTO = outputDTO;
+        totalQuantityForm = new TotalQuantityForm(outputDTO.getFoodQuantity(), outputDTO.getCeramicQuantity(), outputDTO.getElectronicQuantity());
         
     }
 
     @Override
-    public void presenterCeramicQuantity(int totalQuantity) {
-        this.totalQuantityCeramic = totalQuantity;
+    public void presenterCeramicQuantity(TotalQuantityOutputDTO outputDTO) {
+        this.outputDTO = outputDTO;
+        totalQuantityForm = new TotalQuantityForm(outputDTO.getFoodQuantity(), outputDTO.getCeramicQuantity(), outputDTO.getElectronicQuantity());
+        
     }
 
     @Override
-    public void presenterElectronicQuantity(int totalQuantity) {
-        this.totalQuantityElectronic = totalQuantity;
+    public void presenterElectronicQuantity(TotalQuantityOutputDTO outputDTO) {
+        this.outputDTO = outputDTO;
+        totalQuantityForm = new TotalQuantityForm(outputDTO.getFoodQuantity(), outputDTO.getCeramicQuantity(), outputDTO.getElectronicQuantity());
+        totalQuantityForm.setVisible(true);
+    }
+
+    public TotalQuantityOutputDTO getOutputDTO() {
+        return outputDTO;
     }
 
 }

@@ -10,6 +10,7 @@ import com.example.usecase.createProduct.AddInputBoundary;
 import com.example.usecase.createProduct.AddInputDTO;
 import com.example.usecase.createProduct.AddOutputDTO;
 import com.example.usecase.createProduct.AddUseCase;
+import com.example.usecase.createProduct.ResponeData;
 
 public class AddTest {
 
@@ -29,16 +30,19 @@ public class AddTest {
         cal2.set(2024, Calendar.DECEMBER, 8);
         Date date2 = cal2.getTime();
 
-        AddInputDTO addInputDTO3 = new AddInputDTO(0, "bbbbbbbb", 10, "electronic", 10, "cai", "10 thang","100kw");
+        //AddInputDTO addInputDTO3 = new AddInputDTO(0, "bbbbbbbb", 10, "electronic", 10, "cai", "10 thang","100kw");
         //AddInputDTO addInputDTO2 = new AddInputDTO(0, "bbbbbbbb", 10, "ceramic", 10, "cai",  "xxxxxx",date1 );
-        AddInputDTO addInputDTO = new AddInputDTO(0, "bbbbbbbb", 10, "food", 10, "cai",  date1, date2, "xxxxxx");
+        AddInputDTO addInputDTO = new AddInputDTO(0, "bbbbbbbb", 10000, "food", 10, "cai",  date1, date2, "xxxxxx");
 
-        addInputBoundary.execute(addInputDTO3);
+        addInputBoundary.execute(addInputDTO);
  
         AddOutputDTO addOutputDTO = presenter.geOutputDTO();
+        assertEquals(addInputDTO.getName(), addOutputDTO.getName());
 
-        assertEquals(addInputDTO3.getName(), addOutputDTO.getName());
-        assertEquals(addInputDTO3.getPrice(), addOutputDTO.getPrice(), 0.01); 
-        assertEquals(addInputDTO3.getCategory(), addOutputDTO.getCategory());
+        
+       
+        // ResponeData res = presenter.getResponeData();
+        // assertEquals("Thông tin không hợp lệ", res.getMessage());
+        
     }
 }

@@ -19,11 +19,8 @@ public class FoodProduct extends Product{
     public String getNhaCungCap() { return nhaCungCap; }
 
     @Override
-    public int totalQuantity(List<Product> productData) {
-        int totalQuantity = 0;
-        for (Product product : productData) {
-            totalQuantity += product.getQuantity();
-        }
-        return totalQuantity;
+    public int totalQuantity() {
+        
+        return getQuantity();
     }
 }

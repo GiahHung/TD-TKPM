@@ -25,19 +25,45 @@ public class AddUseCase implements AddInputBoundary{
         int quantity = addInputDTO.getQuantity(); 
         String dvt = addInputDTO.getDvt();
 
-        if(category.equals("food") && valiateTien(price) && valiateSL(quantity) && valiateHSD(addInputDTO.gethSD()) && validateNSX(addInputDTO.getnSX())){
-            product = new FoodProduct(maMh, name, price, category, quantity, dvt, addInputDTO.getnSX(), 
+        if(category.equals("food") ){
+            if(valiateTien(price) && valiateSL(quantity) && valiateHSD(addInputDTO.gethSD()) && validateNSX(addInputDTO.getnSX())){
+                product = new FoodProduct(maMh, name, price, category, quantity, dvt, addInputDTO.getnSX(), 
             addInputDTO.gethSD(), addInputDTO.getNhaCungCap());
+            }else{
+                String message = "Thông tin không hợp lệ";
+                ResponeData res = new ResponeData();
+                res.message = message;
+                addOutPutBoundary.presentError(res);
+                return;
+            }
+            
 
-        }else if(category.equals("ceramic") && valiateTien(price) && valiateSL(quantity) && valiateNNK(addInputDTO.getNgayNhapKho())){
-            product = new CeramicsProduct(maMh, name, price, category, quantity, dvt, 
+        }else if(category.equals("ceramic") ){
+            if(valiateTien(price) && valiateSL(quantity) && valiateNNK(addInputDTO.getNgayNhapKho())){
+                product = new CeramicsProduct(maMh, name, price, category, quantity, dvt, 
             addInputDTO.getNgayNhapKho(), addInputDTO.getNhaSanXuat());
+            }else{
+                String message = "Thông tin không hợp lệ";
+                ResponeData res = new ResponeData();
+                res.message = message;
+                addOutPutBoundary.presentError(res);
+                return;
+            }
+            
 
-        }else if(category.equals("electronic") && valiateTien(price) && valiateSL(quantity) ){
-            product = new ElectronicProduct(maMh, name, price, category, quantity, dvt, 
+        }else if(category.equals("electronic")  ){
+            if(valiateTien(price) && valiateSL(quantity)){
+                product = new ElectronicProduct(maMh, name, price, category, quantity, dvt, 
             addInputDTO.getBaoHanh(), addInputDTO.getCongSuat());
-
+            }else{
+                String message = "Thông tin không hợp lệ";
+                ResponeData res = new ResponeData();
+                res.message = message;
+                addOutPutBoundary.presentError(res);
+                return;
+            }
         }
+
         int newProductId = data.addProduct(product);
         Product newProduct = data.findProduct(newProductId);
 

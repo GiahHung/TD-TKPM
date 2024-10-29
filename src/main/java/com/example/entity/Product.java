@@ -19,7 +19,7 @@ public abstract class Product {
         this.dvt = dvt;
     }
 
-public abstract int totalQuantity(List<Product> productData);
+public abstract int totalQuantity();
     public int getMaMh() { return maMh; }
     public String getName() { return name; }
     public int getPrice() { return price; }
