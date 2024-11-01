@@ -1,5 +1,5 @@
 package com.example.usecase.totalQuantity;
 
 public interface TotalQuantityInputBoundary {
-void execute();
+void execute(TotalQuantityInputDTO inputDTO);
 }

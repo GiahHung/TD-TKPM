@@ -30,7 +30,7 @@ public class UpdateUsecase implements UpdateInputBoundary {
             if (validatePrice(price) && validateQuantity(quantity) && validateExpiryDate(inputDTO.gethSD()) && validateNSX(inputDTO.getnSX())) {
                 product = new FoodProduct(maMh, name, price, category, quantity, dvt, inputDTO.getnSX(), inputDTO.gethSD(), inputDTO.getNhaCungCap());
             } else {
-                outputError("Thông tin không hợp lệ");
+                outputError( "Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 và NSX phải trước HSD");
                 return;
             }
 
@@ -39,7 +39,7 @@ public class UpdateUsecase implements UpdateInputBoundary {
             if (validatePrice(price) && validateQuantity(quantity) && validateStorageDate(inputDTO.getNgayNhapKho())) {
                 product = new CeramicsProduct(maMh, name, price, category, quantity, dvt, inputDTO.getNgayNhapKho(), inputDTO.getNhaSanXuat());
             } else {
-                outputError("Thông tin không hợp lệ");
+                outputError("Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 ngày nhập kho trước hôm nay");
                 return;
             }
 
@@ -48,15 +48,15 @@ public class UpdateUsecase implements UpdateInputBoundary {
             if (validatePrice(price) && validateQuantity(quantity) && valiateBH(inputDTO.getBaoHanh()) && valiateCongSuat(inputDTO.getCongSuat())) {
                 product = new ElectronicProduct(maMh, name, price, category, quantity, dvt, inputDTO.getBaoHanh(), inputDTO.getCongSuat());
             } else {
-                outputError("Thông tin không hợp lệ");
+                outputError("Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0, bảo hành lớn bàng 0, công suất lớn hơn không");
                 return;
             }
         }
 
         // Check if product exists, update and return result
         if (updateDatabaseBoundary.checkProduct(product)) {
-            int updatedMamh = updateDatabaseBoundary.update(product);
-            Product updatedProduct = updateDatabaseBoundary.findProduct(updatedMamh);
+            int mamh = updateDatabaseBoundary.update(product);
+            Product updatedProduct = updateDatabaseBoundary.findProduct(mamh);
             UpdateOutputDTO updateOutputDTO = new UpdateOutputDTO(
                     updatedProduct.getMaMh(),
                     updatedProduct.getName(),
@@ -66,6 +66,9 @@ public class UpdateUsecase implements UpdateInputBoundary {
                     updatedProduct.getCategory()
             );
             outputBoundary.presenter(updateOutputDTO);
+            ResponeData res = new ResponeData();
+            res.message = "Sửa thành công";
+            outputBoundary.presentMessage(res);
         } else {
             outputError("Not found");
         }
@@ -74,7 +77,7 @@ public class UpdateUsecase implements UpdateInputBoundary {
     private void outputError(String message) {
         ResponeData res = new ResponeData();
         res.message = message;
-        outputBoundary.presentError(res);
+        outputBoundary.presentMessage(res);
     }
 
     private boolean validateNSX(Date NSX) {

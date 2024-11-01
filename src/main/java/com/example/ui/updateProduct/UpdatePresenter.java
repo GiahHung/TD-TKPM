@@ -16,7 +16,7 @@ public class UpdatePresenter implements UpdateOutputBoundary {
     }
 
     @Override
-    public void presentError(ResponeData res) {
+    public void presentMessage(ResponeData res) {
         this.res = res;
     }
     public ResponeData getRes() {

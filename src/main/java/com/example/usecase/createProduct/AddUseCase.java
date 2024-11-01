@@ -30,10 +30,7 @@ public class AddUseCase implements AddInputBoundary{
                 product = new FoodProduct(maMh, name, price, category, quantity, dvt, addInputDTO.getnSX(), 
             addInputDTO.gethSD(), addInputDTO.getNhaCungCap());
             }else{
-                String message = "Thông tin không hợp lệ";
-                ResponeData res = new ResponeData();
-                res.message = message;
-                addOutPutBoundary.presentError(res);
+               outputError( "Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 và NSX phải trước HSD");
                 return;
             }
             
@@ -43,10 +40,8 @@ public class AddUseCase implements AddInputBoundary{
                 product = new CeramicsProduct(maMh, name, price, category, quantity, dvt, 
             addInputDTO.getNgayNhapKho(), addInputDTO.getNhaSanXuat());
             }else{
-                String message = "Thông tin không hợp lệ";
-                ResponeData res = new ResponeData();
-                res.message = message;
-                addOutPutBoundary.presentError(res);
+               
+                outputError("Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 ngày nhập kho trước hôm nay");
                 return;
             }
             
@@ -56,10 +51,7 @@ public class AddUseCase implements AddInputBoundary{
                 product = new ElectronicProduct(maMh, name, price, category, quantity, dvt, 
             addInputDTO.getBaoHanh(), addInputDTO.getCongSuat());
             }else{
-                String message = "Thông tin không hợp lệ";
-                ResponeData res = new ResponeData();
-                res.message = message;
-                addOutPutBoundary.presentError(res);
+                outputError("Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0, bảo hành lớn bàng 0, công suất lớn hơn không");
                 return;
             }
         }
@@ -70,6 +62,14 @@ public class AddUseCase implements AddInputBoundary{
 
         AddOutputDTO addOutputDTO = new AddOutputDTO(newProduct.getName(), newProduct.getPrice(), newProduct.getMaMh(), newProduct.getQuantity(), newProduct.getDvt(), newProduct.getCategory());
         addOutPutBoundary.present(addOutputDTO);
+        ResponeData res = new ResponeData();
+        res.message = "Thêm thành công";
+        addOutPutBoundary.presentMessage(res);
+    }
+    public void outputError(String message){
+        ResponeData res = new ResponeData();
+        res.message = message;
+        addOutPutBoundary.presentMessage(res);
     }
     private boolean validateNSX(Date NSX){
         return NSX != null && NSX.before(new Date());

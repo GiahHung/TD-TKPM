@@ -25,21 +25,33 @@ import com.example.database.AddProductDAO;
 import com.example.database.DeleteProductDAO;
 import com.example.database.FindProductDAO;
 import com.example.database.TotalQuantityDAO;
+import com.example.database.UpdateProductDAO;
+import com.example.database.ViewProductListDAO;
 import com.example.ui.addProduct.AddController;
 import com.example.ui.addProduct.AddPresenter;
 import com.example.ui.deleteProduct.DeleteProductController;
 import com.example.ui.deleteProduct.DeleteProductPresenter;
+import com.example.ui.findProduct.FindProductController;
 import com.example.ui.findProduct.FindProductPresenter;
 import com.example.ui.totalQuantity.TotalQuantityController;
+import com.example.ui.totalQuantity.TotalQuantityForm;
 import com.example.ui.totalQuantity.TotalQuantityPresenter;
+import com.example.ui.updateProduct.UpdateController;
+import com.example.ui.updateProduct.UpdatePresenter;
+import com.example.usecase.UsecaseControl;
 import com.example.usecase.ViewProductDTO;
 import com.example.usecase.createProduct.AddInputDTO;
 import com.example.usecase.createProduct.AddUseCase;
+import com.example.usecase.createProduct.ResponeData;
 import com.example.usecase.deleteProduct.DeleteInputDTO;
+import com.example.usecase.deleteProduct.DeleteOutputDTO;
 import com.example.usecase.deleteProduct.DeleteUsecase;
 import com.example.usecase.findProduct.FindProductOutputDTO;
 import com.example.usecase.findProduct.FindProductUsecase;
+import com.example.usecase.totalQuantity.TotalQuantityInputDTO;
 import com.example.usecase.totalQuantity.TotalQuantityUsecase;
+import com.example.usecase.updateProduct.UpdateInputDTO;
+import com.example.usecase.updateProduct.UpdateUsecase;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -61,14 +73,18 @@ public class CRUDForm extends JFrame {
     private JComboBox comboBox;
     private JButton btnNewButton;
     private JButton btnNewButton_1;
+   
 
-    public CRUDForm(List<ViewProductDTO> products) {
+    public void CRUD(List<ViewProductDTO> products) {
+        setTitle("Student Registration Form");
+        setSize( 1200, 900);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        // JFrame frame = new JFrame("Product Management");
+        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // frame.setSize(901, 455);
     
-        JFrame frame = new JFrame("Product Management");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(901, 455);
-
-        frame.getContentPane().setLayout(new BorderLayout());
+        // frame.getContentPane().setLayout(new BorderLayout());
 
         // Panel for product input fields
         JPanel inputPanel = new JPanel(new GridLayout(6, 2));
@@ -188,12 +204,19 @@ public class CRUDForm extends JFrame {
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleUpdateProduct();
+
+            }
+        });
 
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                handleDeleteProduct(products);
-                reloadTable(products);
+                handleDeleteProduct();
+                initializeTable(products);
             }
         });
 
@@ -211,7 +234,11 @@ public class CRUDForm extends JFrame {
                  TotalQuantityPresenter presenter = new TotalQuantityPresenter();
                  TotalQuantityUsecase totalQuantityUsecase = new TotalQuantityUsecase(presenter,data );
                  TotalQuantityController totalQuantityController = new TotalQuantityController(totalQuantityUsecase);
-                 totalQuantityController.execute();
+                 Set<String> categories = Set.of("food", "ceramic", "electronic");
+                 TotalQuantityInputDTO dto = new TotalQuantityInputDTO(categories);
+                 totalQuantityController.execute(dto);
+                 TotalQuantityForm totalQuantityForm = null;
+                 totalQuantityForm = new TotalQuantityForm(presenter.getOutputDTO().getFoodQuantity(),presenter.getOutputDTO().getCeramicQuantity(),presenter.getOutputDTO().getElectronicQuantity());
             }
         });
         
@@ -223,126 +250,156 @@ public class CRUDForm extends JFrame {
                 FindProductDAO data = new FindProductDAO();
                 FindProductPresenter presenter = new FindProductPresenter();
                 FindProductUsecase usecase = new FindProductUsecase(presenter, data);
-                usecase.execute();
+                FindProductController findProductController = new FindProductController(usecase);
+                findProductController.execute();
 
             }
         });
 
-        // Column headers for the JTable
-        String[] columns = {"Mã", "Tên sản phẩm", "Giá", "Loại", "Số lượng", "DVT"};
 
-      // Create table model
-tableModel = new DefaultTableModel(columns, 0);
-table = new JTable(tableModel);
+     initializeTable(products);
 
-// Add product data to the table (if any)
-for (ViewProductDTO product : products) {
-    Object[] row = {
-        product.getMaMh(), // Assuming this is the product ID
-        product.getName(),
-        product.getPrice(),
-        product.getCategory(),
-        product.getQuantity(),
-        product.getDvt()
-    };
-    tableModel.addRow(row);
-}
+     add(topPanel, BorderLayout.NORTH);
 
-// Add a MouseListener to the table to handle row selection
-table.addMouseListener(new MouseAdapter() {
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) {
-            // Get the data from the selected row
-            int productId = (int) table.getValueAt(selectedRow, 0); 
-            String productName = (String) table.getValueAt(selectedRow, 1);
-            int productPrice = (int) table.getValueAt(selectedRow, 2);
-            String productCategory = (String) table.getValueAt(selectedRow, 3);
-            int productQuantity = (int) table.getValueAt(selectedRow, 4);
-            String productDVT = (String) table.getValueAt(selectedRow, 5);
-
-            // Populate the fields with the selected product data
-            nameField.setText(productName);
-            priceField.setText(String.valueOf(productPrice));
-            quantityField.setText(String.valueOf(productQuantity));
-            dvtField.setText(productDVT);
-            comboBox.setSelectedItem(productCategory);
-        }
-    }
-});
-
-// Add the table to a scroll pane
-      JScrollPane scrollPane = new JScrollPane(table);
-
-// Add the input panel and table to the frame
-      frame.getContentPane().add(topPanel, BorderLayout.NORTH);
-      frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-        
-       
         // Button listeners
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                handleAddProduct(products);
-                reloadTable(products);
+                handleAddProduct();
+               
             }
         });
 
-        // Make the frame visible
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+       
+       // frame.setLocationRelativeTo(null);
+        //frame.setVisible(true);
+    }
+    
+
+    private void handleAddProduct() {
+        AddPresenter addPresenter = new AddPresenter();
+        AddProductDAO addData = new AddProductDAO();
+        AddUseCase addUseCase = new AddUseCase(addData, addPresenter);
+        AddController addProductController = new AddController(addUseCase);
+        
+       
+        String name = nameField.getText();
+        String price = priceField.getText();
+        String category = (String) comboBox.getSelectedItem();
+        String quantity = quantityField.getText();
+        String dvt = dvtField.getText();
+    
+        // Check for empty fields
+        if (name.isEmpty() || price.isEmpty() || quantity.isEmpty() || dvt.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thong tin.");
+            return;
+        }
+    
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    
+        try {
+            AddInputDTO addInputDTO;
+        
+        if (category.equals("food")) {
+            Date NSX = dateFormat.parse(NSXField.getText());
+            Date HSD = dateFormat.parse(HSDField.getText());
+            String nhaCC = nhaCCField.getText();
+            addInputDTO = new AddInputDTO(0, name, Integer.parseInt(price), category, Integer.parseInt(quantity), dvt, NSX, HSD, nhaCC);
+            
+        } else if (category.equals("ceramic")) {
+            Date NNK = dateFormat.parse(NNKField.getText());
+            String nhaSX = nhaSXField.getText();
+            addInputDTO = new AddInputDTO(0, name, Integer.parseInt(price), category, Integer.parseInt(quantity), dvt, nhaSX, NNK);
+            
+        } else if (category.equals("electronic")) {
+            int BH = Integer.parseInt(BHField.getText());
+            int congSuat = Integer.parseInt(congSuatField.getText());
+            addInputDTO = new AddInputDTO(0, name, Integer.parseInt(price), category, Integer.parseInt(quantity), dvt, BH, congSuat);
+            
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid category.");
+            return;
+        }
+        
+        addProductController.execute(addInputDTO);
+        ResponeData res = addPresenter.getResponeData();  
+        
+        if (res != null && res.getMessage()=="Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0, bảo hành lớn bàng 0, công suất lớn hơn không" || res.getMessage()=="Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 ngày nhập kho trước hôm nay" || res.getMessage()=="Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 và NSX phải trước HSD") {
+            JOptionPane.showMessageDialog(this, res.getMessage());
+        } else {
+            JOptionPane.showMessageDialog(this, res.getMessage());
+            resetForm();
+           
+        }
+    
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(this, "Sử dụng định dạng 'yyyy-MM-dd'.");
+            return;
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Chỉ nhập số cho giá tiền và số lượng");
+            return;
+        }
+    
+
+    }
+    
+    private void handleUpdateProduct() {
+    int selectedRow = table.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm để xóa.");
+        return;
     }
 
-   private void handleAddProduct(List<ViewProductDTO> products) {
-    AddPresenter addPresenter = new AddPresenter();
-    AddProductDAO addData = new AddProductDAO();
-    AddUseCase addUseCase = new AddUseCase(addData, addPresenter);
-    AddController addProductController = new AddController(addUseCase);
+    int productId = (int) table.getValueAt(selectedRow, 0); // Get product ID from the table
     String name = nameField.getText();
     String price = priceField.getText();
     String category = (String) comboBox.getSelectedItem();
-    String quantity = quantityField.getText() ;
+    String quantity = quantityField.getText();
     String dvt = dvtField.getText();
 
-    if (name.isEmpty() || price.isEmpty() || quantity.isEmpty() || dvt.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please fill in all fields.");
-        return;
-    }
+    // Use different fields based on category
+    UpdateInputDTO updateInputDTO = null;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     try {
         if (category.equals("food")) {
-            // Parse Date fields
             Date NSX = dateFormat.parse(NSXField.getText());
             Date HSD = dateFormat.parse(HSDField.getText());
             String nhaCC = nhaCCField.getText();
-            AddInputDTO addInputDTO = new AddInputDTO(0, name, Integer.parseInt(price), category, Integer.parseInt(quantity), dvt, NSX, HSD, nhaCC);
-            addProductController.execute(addInputDTO);
-
+            updateInputDTO = new UpdateInputDTO(productId, name, Integer.parseInt(price), category, Integer.parseInt(quantity), dvt, NSX, HSD, nhaCC);
         } else if (category.equals("ceramic")) {
             Date NNK = dateFormat.parse(NNKField.getText());
             String nhaSX = nhaSXField.getText();
-            AddInputDTO addInputDTO = new AddInputDTO(0, name, Integer.parseInt(price), category, Integer.parseInt(quantity), dvt, nhaSX,NNK);
-            addProductController.execute(addInputDTO);
-
+            updateInputDTO = new UpdateInputDTO(productId, name, Integer.parseInt(price), category, Integer.parseInt(quantity), dvt, nhaSX, NNK);
         } else if (category.equals("electronic")) {
             int BH = Integer.parseInt(BHField.getText());
             int congSuat = Integer.parseInt(congSuatField.getText());
-            AddInputDTO addInputDTO = new AddInputDTO(0, name, Integer.parseInt(price), category, Integer.parseInt(quantity), dvt, BH, congSuat);
-            addProductController.execute(addInputDTO);
+            updateInputDTO = new UpdateInputDTO(productId, name, Integer.parseInt(price), category, Integer.parseInt(quantity), dvt, BH, congSuat);
         }
     } catch (ParseException e) {
-        JOptionPane.showMessageDialog(this, "Invalid date format. Please use 'yyyy-MM-dd'.");
+        JOptionPane.showMessageDialog(this, "Điền đúng định dạng 'yyyy-MM-dd'.");
+        return;
+    }catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Chỉ nhập số cho giá tiền và số lượng");
         return;
     }
 
-    // Reset the form after adding
-    
-    resetForm();
-    reloadTable(products);
+    // Execute update through controller
+    UpdatePresenter updatePresenter = new UpdatePresenter();
+    UpdateProductDAO updateData = new UpdateProductDAO();
+    UpdateUsecase updateUseCase = new UpdateUsecase(updatePresenter, updateData );
+    UpdateController updateController = new UpdateController(updateUseCase);
+    updateController.execute(updateInputDTO);
+    com.example.usecase.updateProduct.ResponeData res = updatePresenter.getRes();
+    if (res != null && res.getMessage()=="Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0, bảo hành lớn bàng 0, công suất lớn hơn không" || res.getMessage()=="Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 ngày nhập kho trước hôm nay" || res.getMessage()=="Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 và NSX phải trước HSD") {
+        JOptionPane.showMessageDialog(this, res.getMessage());
+    } else {
+        JOptionPane.showMessageDialog(this, res.getMessage());
+        resetForm();
+       
+    }
 }
+
 
     private void resetForm() {
         nameField.setText("");
@@ -357,30 +414,12 @@ table.addMouseListener(new MouseAdapter() {
         BHField.setText("");
         congSuatField.setText("");
     }
+    private void initializeTable(List<ViewProductDTO> products) {
+        String[] columns = {"Mã", "Tên sản phẩm", "Giá", "Loại", "Số lượng", "DVT"};
+        tableModel = new DefaultTableModel(columns, 0);
+        table = new JTable(tableModel);
 
-    private void handleDeleteProduct(List<ViewProductDTO> products) {
-        DeleteProductPresenter deletePresenter = new DeleteProductPresenter();
-        DeleteProductDAO deleteData = new DeleteProductDAO();
-        DeleteUsecase deleteUseCase = new DeleteUsecase(deletePresenter, deleteData);
-        DeleteProductController deleteProductController = new DeleteProductController(deleteUseCase);
-        int selectedRow = table.getSelectedRow();
-        int productId = (int) table.getValueAt(selectedRow, 0); 
-        String productName = (String) table.getValueAt(selectedRow, 1);
-        int productPrice = (int) table.getValueAt(selectedRow, 2);
-        String productCategory = (String) table.getValueAt(selectedRow, 3);
-        int productQuantity = (int) table.getValueAt(selectedRow, 4);
-        String productDVT = (String) table.getValueAt(selectedRow, 5);
-        DeleteInputDTO deleteInputDTO = new DeleteInputDTO(productId, productName, productPrice, productCategory, productQuantity, productDVT);
-        deleteProductController.execute(deleteInputDTO);
-        resetForm();
-        reloadTable(products);
-    }
-
-    private void reloadTable(List<ViewProductDTO> products) {
-        // Clear the existing rows
-        tableModel.setRowCount(0);
-    
-        // Add the updated product data
+        // Populate table with data
         for (ViewProductDTO product : products) {
             Object[] row = {
                 product.getMaMh(),
@@ -392,10 +431,92 @@ table.addMouseListener(new MouseAdapter() {
             };
             tableModel.addRow(row);
         }
-    
-        // Revalidate and repaint the table to ensure UI updates
-        table.revalidate();
-        table.repaint();
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Get the data from the selected row
+                    int productId = (int) table.getValueAt(selectedRow, 0);
+                    String productName = (String) table.getValueAt(selectedRow, 1);
+                    int productPrice = (int) table.getValueAt(selectedRow, 2);
+                    String productCategory = (String) table.getValueAt(selectedRow, 3);
+                    int productQuantity = (int) table.getValueAt(selectedRow, 4);
+                    String productDVT = (String) table.getValueAt(selectedRow, 5);
+        
+                   
+                    ViewProductDTO selectedProduct = products.stream()
+                            .filter(p -> p.getMaMh() == productId)
+                            .findFirst()
+                            .orElse(null);
+        
+                    if (selectedProduct != null) {
+               
+                        nameField.setText(productName);
+                        priceField.setText(String.valueOf(productPrice));
+                        quantityField.setText(String.valueOf(productQuantity));
+                        dvtField.setText(productDVT);
+                        comboBox.setSelectedItem(productCategory);
+        
+                        if ("food".equals(productCategory)) {
+                            NSXField.setText(String.valueOf(selectedProduct.getnSX()));
+                            HSDField.setText(String.valueOf(selectedProduct.gethSD()));
+                            nhaCCField.setText(selectedProduct.getNhaCungCap());
+                        } else if ("ceramic".equals(productCategory)) {
+                            NNKField.setText(String.valueOf(selectedProduct.getNgayNhapKho()));
+                            nhaSXField.setText(selectedProduct.getNhaSanXuat());
+                        } else if ("electronic".equals(productCategory)) {
+                            BHField.setText(String.valueOf(selectedProduct.getBaoHanh()));
+                            congSuatField.setText(String.valueOf(selectedProduct.getCongSuat()));
+                        }
+                    }
+                }
+            }
+        });
+        JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane, BorderLayout.CENTER);
     }
+    private void handleDeleteProduct() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm để xóa.");
+            return;
+        }
+    
+        DeleteProductPresenter deletePresenter = new DeleteProductPresenter();
+        DeleteProductDAO deleteData = new DeleteProductDAO();
+        DeleteUsecase deleteUseCase = new DeleteUsecase(deletePresenter, deleteData);
+        DeleteProductController deleteProductController = new DeleteProductController(deleteUseCase);
+    
+        // Get the selected product details
+        int productId = (int) table.getValueAt(selectedRow, 0);
+        String productName = (String) table.getValueAt(selectedRow, 1);
+        int productPrice = (int) table.getValueAt(selectedRow, 2);
+        String productCategory = (String) table.getValueAt(selectedRow, 3);
+        int productQuantity = (int) table.getValueAt(selectedRow, 4);
+        String productDVT = (String) table.getValueAt(selectedRow, 5);
+    
+        DeleteInputDTO deleteInputDTO = new DeleteInputDTO(productId, productName, productPrice, productCategory, productQuantity, productDVT);
+        deleteProductController.execute(deleteInputDTO);
+        DeleteOutputDTO message= deletePresenter.getOutputDTO();
+        JOptionPane.showMessageDialog(this, message.getMessage());
+        resetForm();
+        
+        
+    }
+    private void clearTable() {
+   
+            //tableModel.setRowCount(0); // Clear all rows
+            ViewListProductPresenter presenter = new ViewListProductPresenter();
+        ViewProductListDAO data = new ViewProductListDAO();
+        UsecaseControl usecaseControl = new UsecaseControl(presenter, data);
+        ViewListProductController viewListProductController = new ViewListProductController(usecaseControl);
+        viewListProductController.execute();
+        List<ViewProductDTO> viewProductDTOs = presenter.getViewProductDTOs();
+        
+        CRUD(viewProductDTOs);
+        
+    }
+    
 }
    

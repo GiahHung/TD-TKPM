@@ -40,11 +40,11 @@ public void execute(DeleteInputDTO deleteInputDTO) {
         }
         if (deleteData.checkProduct(product)) {
             deleteData.delete(product);
-           String message = "Product deleted successfully.";
+           String message = "Xóa thành công";
            deleteOutputDTO = new DeleteOutputDTO(message);
            output.present(deleteOutputDTO);
         } else {
-            String message = "Product deleted fail.";
+            String message = "Xóa thất bại";
             deleteOutputDTO = new DeleteOutputDTO(message);
             output.present(deleteOutputDTO);
         }

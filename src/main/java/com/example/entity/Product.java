@@ -1,6 +1,6 @@
 package com.example.entity;
 
-import java.util.List;
+
 
 public abstract class Product {
     private int maMh; 

@@ -14,13 +14,13 @@ import com.example.usecase.createProduct.AddDatabaseBoundary;
 
 public class AddProductDAO implements AddDatabaseBoundary {
 
+    private static final String INSERT_PRODUCT_SQL = "INSERT INTO product (productName, price, categoryKey, SL, dvt, nSX, hSD, BH, nhaSX, nhaCC, NNK, congSuat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SELECT_PRODUCT_SQL = "SELECT * FROM product WHERE mamh = ?";
+
     @Override
     public int addProduct(Product product) {
-        String sql = "INSERT INTO product (productName, price, categoryKey, SL, dvt, nSX, hSD,BH, nhaSX, nhaCC, NNK,congSuat) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
-        
         try (Connection conn = ConnectDatabase.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement pstmt = conn.prepareStatement(INSERT_PRODUCT_SQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
             
             pstmt.setString(1, product.getName());
             pstmt.setDouble(2, product.getPrice());
@@ -28,39 +28,34 @@ public class AddProductDAO implements AddDatabaseBoundary {
             pstmt.setInt(4, product.getQuantity());
             pstmt.setString(5, product.getDvt());
 
-            // Set values for FoodProduct, CeramicsProduct, and ElectronicProduct
+            // Set values based on product type
             if (product instanceof FoodProduct) {
                 FoodProduct foodProduct = (FoodProduct) product;
-                pstmt.setDate(6, new java.sql.Date(foodProduct.getNSX().getTime())); 
+                pstmt.setDate(6, new java.sql.Date(foodProduct.getNSX().getTime()));
                 pstmt.setDate(7, new java.sql.Date(foodProduct.getHSD().getTime()));
-                pstmt.setNull(8, java.sql.Types.VARCHAR); 
-                pstmt.setNull(9, java.sql.Types.VARCHAR); 
+                pstmt.setNull(8, java.sql.Types.VARCHAR);
+                pstmt.setNull(9, java.sql.Types.VARCHAR);
                 pstmt.setString(10, foodProduct.getNhaCungCap());
                 pstmt.setNull(11, java.sql.Types.DATE);
-                pstmt.setNull(12, java.sql.Types.VARCHAR); 
-                
-
+                pstmt.setNull(12, java.sql.Types.VARCHAR);
             } else if (product instanceof CeramicsProduct) {
                 CeramicsProduct ceramicsProduct = (CeramicsProduct) product;
-                pstmt.setNull(6, java.sql.Types.DATE); 
-                pstmt.setNull(7, java.sql.Types.DATE); 
-                pstmt.setNull(8, java.sql.Types.VARCHAR); 
-                pstmt.setString(9, ceramicsProduct.getNhaSanXuat()); 
+                pstmt.setNull(6, java.sql.Types.DATE);
+                pstmt.setNull(7, java.sql.Types.DATE);
+                pstmt.setNull(8, java.sql.Types.VARCHAR);
+                pstmt.setString(9, ceramicsProduct.getNhaSanXuat());
                 pstmt.setNull(10, java.sql.Types.VARCHAR);
-                pstmt.setDate(11, new java.sql.Date(ceramicsProduct.getNgayNhapKho().getTime())); 
-                pstmt.setNull(12, java.sql.Types.VARCHAR); 
-                
-
+                pstmt.setDate(11, new java.sql.Date(ceramicsProduct.getNgayNhapKho().getTime()));
+                pstmt.setNull(12, java.sql.Types.VARCHAR);
             } else if (product instanceof ElectronicProduct) {
                 ElectronicProduct electronicProduct = (ElectronicProduct) product;
                 pstmt.setNull(6, java.sql.Types.DATE);
-                pstmt.setNull(7, java.sql.Types.DATE); 
-                pstmt.setInt(8, electronicProduct.getBaoHanh());              
-                pstmt.setNull(9, java.sql.Types.VARCHAR); 
+                pstmt.setNull(7, java.sql.Types.DATE);
+                pstmt.setInt(8, electronicProduct.getBaoHanh());
+                pstmt.setNull(9, java.sql.Types.VARCHAR);
                 pstmt.setNull(10, java.sql.Types.VARCHAR);
                 pstmt.setNull(11, java.sql.Types.DATE);
-                pstmt.setInt(12, electronicProduct.getCongSuat()); 
-                
+                pstmt.setInt(12, electronicProduct.getCongSuat());
             }
 
             pstmt.executeUpdate();
@@ -79,41 +74,36 @@ public class AddProductDAO implements AddDatabaseBoundary {
     }
 
     @Override
-    public  Product findProduct(int newProductId) {
-        String sql = "SELECT * FROM product WHERE mamh = ?"; // ma_mh is the primary key
+    public Product findProduct(int newProductId) {
         Product product = null;
 
         try (Connection conn = ConnectDatabase.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(SELECT_PRODUCT_SQL)) {
             
             pstmt.setInt(1, newProductId); // Set the product ID
             
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    // Retrieve data from the result set
                     String name = rs.getString("productName");
                     int price = rs.getInt("price");
                     String category = rs.getString("categoryKey");
                     int quantity = rs.getInt("sl");
                     String dvt = rs.getString("dvt");
 
-                    // Check the category to create the appropriate product type
+                    // Create product based on category
                     if (category.equalsIgnoreCase("food")) {
                         Date nSX = rs.getDate("nSX");
                         Date hSD = rs.getDate("hSD");
                         String ncc = rs.getString("NhaCC");
-                        product = new FoodProduct(newProductId, name, price, category, quantity, dvt, nSX, hSD,ncc);
-                        System.out.println(name);
+                        product = new FoodProduct(newProductId, name, price, category, quantity, dvt, nSX, hSD, ncc);
                     } else if (category.equalsIgnoreCase("ceramic")) {
                         Date ngayNhapKho = rs.getDate("NNK");
                         String nhaSanXuat = rs.getString("nhaSX");
                         product = new CeramicsProduct(newProductId, name, price, category, quantity, dvt, ngayNhapKho, nhaSanXuat);
-                        System.out.println(name);
                     } else if (category.equalsIgnoreCase("electronic")) {
                         int baoHanh = rs.getInt("BH");
                         int congSuat = rs.getInt("congSuat");
                         product = new ElectronicProduct(newProductId, name, price, category, quantity, dvt, baoHanh, congSuat);
-                        System.out.println(name);
                     }
                 }
             }
@@ -123,6 +113,4 @@ public class AddProductDAO implements AddDatabaseBoundary {
 
         return product; // Return the product or null if not found
     }
-
- 
 }

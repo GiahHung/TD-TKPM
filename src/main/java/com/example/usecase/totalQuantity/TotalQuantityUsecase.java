@@ -13,34 +13,35 @@ public class TotalQuantityUsecase implements TotalQuantityInputBoundary {
     }
 
     @Override
-    public void execute() {
-      TotalQuantityOutputDTO outputDTO =null;
-        //food
-      List<Product> foodQuantityList = data.getFoodQuantityList();
-      int totalQuantityFood = 0;
-      for (Product product : foodQuantityList) {
-        totalQuantityFood += product.totalQuantity();
-    }
-      
-     
-       //ceramic
-       List<Product> ceramicQuantityList = data.getCeramicQuantityList();
-       int totalQuantityCeramic = 0;
-       for (Product product : ceramicQuantityList) {
-        totalQuantityCeramic += product.totalQuantity();
-     }
+    public void execute(TotalQuantityInputDTO inputDTO) {
        
-       
-        //electronic
-      List<Product> electronicQuantityList = data.getElectronicQuantityList();
-      int totalQuantityElectronic = 0;
-      for (Product product : electronicQuantityList) {
-        totalQuantityElectronic += product.totalQuantity();
-    }
-    outputDTO = new TotalQuantityOutputDTO(totalQuantityFood, totalQuantityCeramic, totalQuantityElectronic);
-    output.presenterFoodQuantity(outputDTO);
-    output.presenterCeramicQuantity(outputDTO);
-    output.presenterElectronicQuantity(outputDTO);
+        List<Product> quantityList = data.getQuantityList(inputDTO.getCategories());
+        
+        int totalQuantityFood = 0;
+        int totalQuantityCeramic = 0;
+        int totalQuantityElectronic = 0;
+    
+  
+        for (Product product : quantityList) {
+          String category = product.getCategory().toLowerCase();
+  
+          if (inputDTO.getCategories().contains(category)) {
+              switch (category) {
+                  case "food":
+                      totalQuantityFood += product.totalQuantity();
+                      break;
+                  case "ceramic":
+                      totalQuantityCeramic += product.totalQuantity();
+                      break;
+                  case "electronic":
+                      totalQuantityElectronic += product.totalQuantity();
+                      break;
+              }
+          }
+        }
+        TotalQuantityOutputDTO outputDTO = new TotalQuantityOutputDTO(totalQuantityFood, totalQuantityCeramic, totalQuantityElectronic);
 
-    }
+        output.presentTotalQuantity(outputDTO);
+      }
+  
 }

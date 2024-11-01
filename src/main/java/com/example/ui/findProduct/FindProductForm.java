@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,13 +11,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
+import com.example.usecase.ViewProductDTO;
 import com.example.usecase.findProduct.FindProductOutputDTO;
 
 public class FindProductForm {
- public  void ShowGUI(List<FindProductOutputDTO> products) {
-        JFrame frame = new JFrame("Student Management");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public FindProductForm(List<FindProductOutputDTO> products) {
+        JFrame frame = new JFrame();
+        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(900, 500);
 
         // Create title label
@@ -28,31 +29,29 @@ public class FindProductForm {
 
         // Column headers for the JTable
         String[] columns = {
-                "Mã", "tên sản phẩm", "Giá", "Loại", "Số lượng", "DVT", "NSX","HSD","Nhà cung cấp"
+                "Mã", "Tên sản phẩm", "Giá", "Loại", "Số lượng ", "DVT", "NSX","HSD","Nhà cung cấp"
         };
 
         // Create table model
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         JTable table = new JTable(tableModel);
 
-        // Sample list of students
-        //List<Student> students = getStudentList();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         // Add student data to the table
         for (int i = 0; i < products.size(); i++) {
             FindProductOutputDTO product = products.get(i);
             Object[] row = {
+                    i + 1,
                     product.getMaMh(),
                     product.getName(),
                     product.getPrice(),
                     product.getCategory(),
                     product.getQuantity(),
                     product.getDvt(),
-                    sdf.format(product.getNSX()),
-                    sdf.format(product.getHSD()),
+                    product.getNSX(),
+                    product.getHSD(),
                     product.getNhacc(),
-                    
             };
             tableModel.addRow(row);
         }

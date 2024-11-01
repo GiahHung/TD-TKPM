@@ -13,7 +13,9 @@ public class ViewListProductPresenter implements OutputBoundary {
     @Override
     public void present(List<ViewProductDTO> viewProductDTOs) {
      this.viewProductDTOs = viewProductDTOs;
-     crudForm = new CRUDForm(viewProductDTOs);
+   // crudForm = new CRUDForm();
+   // crudForm.CRUD(viewProductDTOs);
+    
     }
 
     public List<ViewProductDTO> getViewProductDTOs() {

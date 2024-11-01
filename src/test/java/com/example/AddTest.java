@@ -30,19 +30,20 @@ public class AddTest {
         cal2.set(2024, Calendar.DECEMBER, 8);
         Date date2 = cal2.getTime();
 
-        AddInputDTO addInputDTO3 = new AddInputDTO(0, "TV Samsung", 25000000, "electronic", 10, "cai", 0,0);
+        //AddInputDTO addInputDTO3 = new AddInputDTO(0, "TV Samsung", 25000000, "electronic", 10, "cai", 0,0);
         //AddInputDTO addInputDTO2 = new AddInputDTO(0, "Chậu", 100000, "ceramic", 20, "cai",  "xxxxxx",date1 );
-        //AddInputDTO addInputDTO = new AddInputDTO(0, "Sốt majone", 100000, "food", 100, "cai",  date1, date2, "xxxxxx");
+        AddInputDTO addInputDTO = new AddInputDTO(0, "Sốt majone", 0, "food", 100, "cai",  date1, date2, "xxxxxx");
 
-        addInputBoundary.execute(addInputDTO3);
+        addInputBoundary.execute(addInputDTO);
  
-        //AddOutputDTO addOutputDTO = presenter.geOutputDTO();
-        //assertEquals(addInputDTO3.getName(), addOutputDTO.getName());
+        // AddOutputDTO addOutputDTO = presenter.geOutputDTO();
+        // assertEquals(addInputDTO.getName(), addOutputDTO.getName());
 
         
        
         ResponeData res = presenter.getResponeData();
-        assertEquals("Thông tin không hợp lệ", res.getMessage());
+        assertEquals("Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 và NSX phải trước HSD", res.getMessage());
+        
         
     }
 }

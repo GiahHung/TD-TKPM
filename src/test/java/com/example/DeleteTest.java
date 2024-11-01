@@ -19,7 +19,7 @@ public class DeleteTest {
 
           deleteUsecase.execute(deleteInputDTO);
 
-         assertEquals("Product deleted successfully.", deleteProductPresenter.getOutputDTO().getMessage());
+         assertEquals("Xóa thành công", deleteProductPresenter.getOutputDTO().getMessage());
 
  }
 }

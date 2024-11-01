@@ -15,11 +15,12 @@ public class AddPresenter implements AddOutPutBoundary{
         return addOutputDTO;
     }
     @Override
-    public void presentError(ResponeData res) {
+    public void presentMessage(ResponeData res) {
         this.res = res;
     }
     public ResponeData getResponeData(){
         return res;
     }
+
 
 }

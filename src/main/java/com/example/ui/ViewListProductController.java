@@ -12,7 +12,7 @@ public class ViewListProductController {
 	
 	public void execute(){
 		inputBoundary.execute();
-	}
+	} 
 		
 }
 

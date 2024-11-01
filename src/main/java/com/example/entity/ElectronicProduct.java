@@ -1,6 +1,5 @@
 package com.example.entity;
 
-import java.util.List;
 
 public class ElectronicProduct extends Product{
     private int baoHanh; // Warranty period
