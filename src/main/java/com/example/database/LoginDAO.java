@@ -30,5 +30,24 @@ public class LoginDAO implements LoginDataBoundary{
         return false;
 
 }
+     @Override
+     public User getRole(String username){
+        User user = null;
+        String query = "SELECT role FROM users WHERE username = ? ";
+        try (Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);  
+  
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String role = rs.getString("role");
+                    user = new User(username, null, role); 
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+     }
  
 }

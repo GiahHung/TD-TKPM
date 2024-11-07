@@ -12,13 +12,13 @@ import com.example.usecase.deleteProduct.DeleteInputDTO;
 public class DeleteProductDAO implements DeleteDatabaseBoundary {
 
     @Override
-    public void delete(Product product) {
+    public void delete(int mamh) {
           String sql = "DELETE FROM product WHERE MaMh = ?";
         
         try (Connection connection = ConnectDatabase.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
              
-            preparedStatement.setInt(1, product.getMaMh());
+            preparedStatement.setInt(1, mamh);
             preparedStatement.executeUpdate();
             System.out.println("Product deleted successfully.");
         } catch (SQLException e) {
@@ -27,13 +27,13 @@ public class DeleteProductDAO implements DeleteDatabaseBoundary {
     }
 
     @Override
-    public boolean checkProduct(Product product) {
+    public boolean checkProduct(int mamh) {
          String sql = "SELECT COUNT(*) FROM product WHERE MaMh = ?";
         
         try (Connection connection = ConnectDatabase.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
              
-            preparedStatement.setInt(1, product.getMaMh());
+            preparedStatement.setInt(1, mamh);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return resultSet.getInt(1) > 0;

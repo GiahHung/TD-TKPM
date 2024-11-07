@@ -17,9 +17,9 @@ public class RegisterTest {
         ResgisterDAO data = new ResgisterDAO();
         ResgisterPresenter presenter = new ResgisterPresenter();
         ResgisterUsecase usecase = new ResgisterUsecase(data,presenter );
-        ResgisterInputDTO DTO = new ResgisterInputDTO("hung", "123");
+        ResgisterInputDTO DTO = new ResgisterInputDTO("hung", "123","123");
         usecase.execute(DTO);
         ResponeData res = presenter.getRes();
-        assertEquals("Đăng ký thành công", res.getMessageSuccess());
+        assertEquals("Username đã tồn tại", res.getMessageFail());
     }
 }

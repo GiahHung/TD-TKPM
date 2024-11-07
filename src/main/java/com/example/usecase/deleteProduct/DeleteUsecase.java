@@ -16,30 +16,11 @@ public DeleteUsecase(DeleteOutputBoundary deleteOutputBoundary, DeleteDatabaseBo
 
 @Override
 public void execute(DeleteInputDTO deleteInputDTO) {
-     Product product = null;
      DeleteOutputDTO deleteOutputDTO = null;
         int maMh = deleteInputDTO.getMaMh(); 
-        String name = deleteInputDTO.getName(); 
-        int price = deleteInputDTO.getPrice();
-        String category = deleteInputDTO.getCategory(); 
-        int quantity = deleteInputDTO.getQuantity(); 
-        String dvt = deleteInputDTO.getDvt();
-
-        if(category.equals("food")){
-            product = new FoodProduct(maMh, name, price, category, quantity, dvt, deleteInputDTO.getnSX(), 
-            deleteInputDTO.gethSD(), deleteInputDTO.getNhaCungCap());
-
-        }else if(category.equals("ceramic") ){
-            product = new CeramicsProduct(maMh, name, price, category, quantity, dvt, 
-            deleteInputDTO.getNgayNhapKho(), deleteInputDTO.getNhaSanXuat());
-
-        }else if(category.equals("electronic")){
-            product = new ElectronicProduct(maMh, name, price, category, quantity, dvt, 
-            deleteInputDTO.getBaoHanh(), deleteInputDTO.getCongSuat());
-
-        }
-        if (deleteData.checkProduct(product)) {
-            deleteData.delete(product);
+       
+        if (deleteData.checkProduct(maMh)) {
+            deleteData.delete(maMh);
            String message = "Xóa thành công";
            deleteOutputDTO = new DeleteOutputDTO(message);
            output.present(deleteOutputDTO);

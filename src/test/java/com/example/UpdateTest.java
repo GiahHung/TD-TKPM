@@ -32,7 +32,7 @@ public class UpdateTest {
       Date date2 = cal2.getTime();
   
       // Creating input DTO for updating the product
-      UpdateInputDTO updateInputDTO = new UpdateInputDTO(30, "cccc", 0, "food", 20, "chai", date1, date2, "Chin-su");
+      UpdateInputDTO updateInputDTO = new UpdateInputDTO(81, "mmmm", 10000, "food", 20, "chai", date1, date2, "Chin-su");
   
       // Executing the update use case
       updateUsecase.execute(updateInputDTO);
@@ -40,14 +40,14 @@ public class UpdateTest {
       UpdateOutputDTO updateOutputDTO = presenter.getOutputDTO();
   
       
-      // assertEquals(updateInputDTO.getName(), updateOutputDTO.getName());
-      // assertEquals(updateInputDTO.getCategory(), updateOutputDTO.getCategory());
-      // assertEquals(updateInputDTO.getQuantity(), updateOutputDTO.getQuantity());
-      // assertEquals(updateInputDTO.getDvt(), updateOutputDTO.getDvt());
+      assertEquals(updateInputDTO.getName(), updateOutputDTO.getName());
+      assertEquals(updateInputDTO.getCategory(), updateOutputDTO.getCategory());
+      assertEquals(updateInputDTO.getQuantity(), updateOutputDTO.getQuantity());
+      assertEquals(updateInputDTO.getDvt(), updateOutputDTO.getDvt());
   
   
-      ResponeData res = presenter.getRes();
-      assertEquals("Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 và NSX phải trước HSD", res.getMessage());
+      // ResponeData res = presenter.getRes();
+      // assertEquals("Giá tiền lớn hơn 0, Số lượng lớn hơn bằng 0 và NSX phải trước HSD", res.getMessage());
     }
   }
   

@@ -16,9 +16,12 @@ public class LoginUsecase implements LoginInputBoundary{
 
     @Override
     public void execute(LoginInputDTO loginInputDTO) throws Exception {
-        User user = new User(loginInputDTO.getUserName(), hashPassword(loginInputDTO.getPassword()));
+        User user = new User(loginInputDTO.getUserName(), hashPassword(loginInputDTO.getPassword()),null);
         Boolean checkUser = data.getUser(user);
         if(checkUser){
+            user = data.getRole(loginInputDTO.getUserName());
+            LoginOutputDTO loginOutputDTO = new LoginOutputDTO(user.getRole());
+            output.presenterRole(loginOutputDTO);
             ResponeData res = new ResponeData();
             res.messageSuccess = "Đăng nhập thành công";
             output.presenter(res);

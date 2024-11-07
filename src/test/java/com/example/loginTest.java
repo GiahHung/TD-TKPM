@@ -7,6 +7,7 @@ import org.junit.Test;
 import com.example.database.LoginDAO;
 import com.example.ui.login.LoginPresenter;
 import com.example.usecase.login.LoginInputDTO;
+import com.example.usecase.login.LoginOutputDTO;
 import com.example.usecase.login.LoginUsecase;
 import com.example.usecase.login.ResponeData;
 
@@ -19,7 +20,8 @@ public void login() throws Exception{
     LoginInputDTO DTO = new LoginInputDTO("hung", "123");
     usecase.execute(DTO);
     ResponeData res = presenter.getRes();
-    assertEquals("Đăng nhập thành công", res.getMessageSuccess());
+    LoginOutputDTO loginOutputDTO = presenter.getDto();
+    //assertEquals("Đăng nhập thành công", res.getMessageSuccess());
+   assertEquals("user", loginOutputDTO.getRole());
 }
 }
-

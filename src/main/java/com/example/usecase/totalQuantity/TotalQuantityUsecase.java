@@ -16,31 +16,11 @@ public class TotalQuantityUsecase implements TotalQuantityInputBoundary {
     public void execute(TotalQuantityInputDTO inputDTO) {
        
         List<Product> quantityList = data.getQuantityList(inputDTO.getCategories());
-        
-        int totalQuantityFood = 0;
-        int totalQuantityCeramic = 0;
-        int totalQuantityElectronic = 0;
-    
-  
+        int totalQuantity = 0;
         for (Product product : quantityList) {
-          String category = product.getCategory().toLowerCase();
-  
-          if (inputDTO.getCategories().contains(category)) {
-              switch (category) {
-                  case "food":
-                      totalQuantityFood += product.totalQuantity();
-                      break;
-                  case "ceramic":
-                      totalQuantityCeramic += product.totalQuantity();
-                      break;
-                  case "electronic":
-                      totalQuantityElectronic += product.totalQuantity();
-                      break;
-              }
-          }
+         totalQuantity += product.getQuantity();
         }
-        TotalQuantityOutputDTO outputDTO = new TotalQuantityOutputDTO(totalQuantityFood, totalQuantityCeramic, totalQuantityElectronic);
-
+        TotalQuantityOutputDTO outputDTO = new TotalQuantityOutputDTO(totalQuantity);
         output.presentTotalQuantity(outputDTO);
       }
   

@@ -3,13 +3,13 @@ package com.example.usecase.totalQuantity;
 import java.util.Set;
 
 public class TotalQuantityInputDTO {
-  private Set<String> categories;
+  private String categories;
 
-    public TotalQuantityInputDTO(Set<String> categories) {
+    public TotalQuantityInputDTO(String categories) {
         this.categories = categories;
     }
 
-    public Set<String> getCategories() {
+    public String getCategories() {
         return categories;
     }
 

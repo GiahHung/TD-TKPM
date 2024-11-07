@@ -15,29 +15,18 @@ import com.example.entity.Product;
 import com.example.usecase.totalQuantity.TotalQuantityDatabaseBoundary;
 
 public class TotalQuantityDAO implements TotalQuantityDatabaseBoundary {
-
+    private static final String SELECT_PRODUCTS_QUERY = "SELECT * FROM product WHERE categoryKey =? "; 
     @Override
-    public List<Product> getQuantityList(Set<String> categories) {
+    public List<Product> getQuantityList(String categories) {
         List<Product> products = new ArrayList<>();
 
-        // Convert categories set to a comma-separated list of question marks
-        String placeholders = categories.stream().map(cat -> "?").collect(Collectors.joining(","));
-        String query = "SELECT * FROM product WHERE categoryKey IN (" + placeholders + ")";
-
         try (Connection connection = ConnectDatabase.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            // Set each category value in the prepared statement
-            int index = 1;
-            for (String category : categories) {
-                preparedStatement.setString(index++, category);
-            }
-
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PRODUCTS_QUERY)) {
+             preparedStatement.setString(1, categories);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    String productType = resultSet.getString("categoryKey");
 
-                    switch (productType) {
+                    switch (categories) {
                         case "ceramic":
                             products.add(new CeramicsProduct(
                                 resultSet.getInt("MaMh"), 
@@ -79,7 +68,7 @@ public class TotalQuantityDAO implements TotalQuantityDatabaseBoundary {
                             break;
 
                         default:
-                            System.err.println("Unknown product type: " + productType);
+                            System.err.println("Unknown product type: " + categories);
                             break;
                     }
                 }

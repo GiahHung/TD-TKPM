@@ -21,7 +21,7 @@ public class TotalQuantityForm extends JDialog {
     private JTextField txtElectronic;
 
     public TotalQuantityForm(int quantityFood, int quantityCeramic, int quantityElectronic) {
-        setBounds(300, 300, 400, 200); // Adjusted size for better appearance
+        setBounds(300, 300, 800, 200); // Adjusted size for better appearance
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setLayout(new FlowLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

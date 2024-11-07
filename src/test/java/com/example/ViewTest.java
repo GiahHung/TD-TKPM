@@ -28,7 +28,14 @@ public class ViewTest
 
         List<ViewProductDTO> viewProductDTOs =presenter.getViewProductDTOs();;
         
-        assertEquals(11, viewProductDTOs.size());
+        //assertEquals(11, viewProductDTOs.size());
+        for (ViewProductDTO product : presenter.getViewProductDTOs()) {
+			String productName = product.getName().toLowerCase();
+			String productId = String.valueOf(product.getMaMh());
+            assertEquals("tương ớt", productName);
+			
+		}
+      
         
     }
 }

@@ -5,4 +5,5 @@ import com.example.entity.User;
 
 public interface LoginDataBoundary {
 Boolean getUser(User user);
+User getRole(String username);
 }

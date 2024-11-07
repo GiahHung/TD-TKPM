@@ -15,13 +15,12 @@ public class TotalQuantityTest {
         TotalQuantityDAO data = new TotalQuantityDAO();
         TotalQuantityPresenter presenter = new TotalQuantityPresenter();
         TotalQuantityUsecase totalQuantityUsecase = new TotalQuantityUsecase(presenter,data );
-        Set<String> categories = Set.of("food", "ceramic", "electronic");
-        TotalQuantityInputDTO dto = new TotalQuantityInputDTO(categories);
+        
+        TotalQuantityInputDTO dto = new TotalQuantityInputDTO("ceramic");
 
         totalQuantityUsecase.execute(dto);
-        assertEquals(190, presenter.getOutputDTO().getFoodQuantity());
-        assertEquals(360, presenter.getOutputDTO().getCeramicQuantity());
-        assertEquals(66, presenter.getOutputDTO().getElectronicQuantity());
+        assertEquals(210, presenter.getOutputDTO().getQuantity());
+       
     }
 }
 
