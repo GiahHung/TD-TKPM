@@ -9,8 +9,8 @@ import javax.swing.border.EmptyBorder;
 import com.example.database.GetAllCodeDAO;
 import com.example.database.LoginDAO;
 import com.example.database.ViewProductListDAO;
-import com.example.ui.MainForm;
-import com.example.ui.UserForm;
+import com.example.ui.ManageProduct;
+import com.example.ui.User;
 import com.example.ui.ViewListProductController;
 import com.example.ui.ViewListProductPresenter;
 import com.example.ui.getAllCode.GetAllCodePresenter;
@@ -40,22 +40,7 @@ public class LoginForm extends JFrame {
 	private JTextField txtUsername;
 	private JPasswordField txtPassword;
 	private JLabel lblInfo;
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginForm frame = new LoginForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
+	
 	public LoginForm() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 440, 460);
@@ -146,20 +131,11 @@ public class LoginForm extends JFrame {
 		if(!checkUser){
 			 lblInfo.setText(res.getMessageFail());
 		}else{
-			ViewListProductPresenter present = new ViewListProductPresenter();
-             ViewProductListDAO data = new ViewProductListDAO();
-             UsecaseControl usecaseControl = new UsecaseControl(present, data);
-             ViewListProductController viewListProductController = new ViewListProductController(usecaseControl);
-             viewListProductController.execute();
-             GetAllCodeDAO dataCategory = new GetAllCodeDAO();
-             GetAllCodePresenter presentCategory = new GetAllCodePresenter();
-             GetAllCodeUsecase usecase = new GetAllCodeUsecase(dataCategory,presentCategory);
-             usecase.execute("category");
 			 Runnable formToShow;
              if ("user".equals(loginOutputDTO.getRole())) {
-                 formToShow = () -> new UserForm(present.getViewProductDTOs(), presentCategory.getCategory());
+                 formToShow = () -> new User();
              } else {
-                 formToShow = () -> new MainForm(present.getViewProductDTOs(), presentCategory.getCategory());
+                 formToShow = () -> new ManageProduct();
             }
 
         // Show the selected form and close the current one

@@ -28,9 +28,11 @@ import com.example.ui.addProduct.*;
 import com.example.ui.deleteProduct.DeleteProductController;
 import com.example.ui.deleteProduct.DeleteProductPresenter;
 import com.example.ui.findProduct.FindProductController;
+import com.example.ui.findProduct.FindProductForm;
 import com.example.ui.findProduct.FindProductPresenter;
 import com.example.ui.getAllCode.GetAllCodePresenter;
 import com.example.ui.getOneProduct.GetOneProductPresenter;
+import com.example.ui.login.LoginForm;
 import com.example.ui.totalQuantity.TotalQuantityPresenter;
 import com.example.ui.updateProduct.UpdateProductForm;
 import com.example.usecase.UsecaseControl;
@@ -38,7 +40,9 @@ import com.example.usecase.ViewProductDTO;
 import com.example.usecase.deleteProduct.DeleteInputDTO;
 import com.example.usecase.deleteProduct.DeleteOutputDTO;
 import com.example.usecase.deleteProduct.DeleteUsecase;
+import com.example.usecase.findProduct.FindProductOutputDTO;
 import com.example.usecase.findProduct.FindProductUsecase;
+import com.example.usecase.findProduct.ResponeData;
 import com.example.usecase.getAllCode.GetAllCodeUsecase;
 import com.example.usecase.getOneProduct.GetOneProductUseCase;
 import com.example.usecase.totalQuantity.TotalQuantityInputDTO;
@@ -53,14 +57,23 @@ import javax.swing.JTable;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JPopupMenu;
-
-public class MainForm extends JFrame {
+import java.awt.EventQueue;
+public class ManageProduct extends JFrame {
 	private JTextField txtSearch;
 	private JTable table;
 	private JTextField txtTotal;
 	private DefaultTableModel tableModel;
 
-	 public MainForm(List<ViewProductDTO> products,List<AllCode> keyMapCategory) {
+	 public ManageProduct() {
+		ViewListProductPresenter presenter = new ViewListProductPresenter();
+		ViewProductListDAO data = new ViewProductListDAO();
+		UsecaseControl usecaseControl = new UsecaseControl(presenter, data);
+		ViewListProductController viewListProductController = new ViewListProductController(usecaseControl);
+		viewListProductController.execute();
+		GetAllCodeDAO dataCategory = new GetAllCodeDAO();
+		GetAllCodePresenter presentCategory = new GetAllCodePresenter();
+		GetAllCodeUsecase usecase = new GetAllCodeUsecase(dataCategory,presentCategory);
+		usecase.execute("category");
 	        // Set up main form properties
 	        setTitle("Clinic Management System");
 	        setSize(1010, 670);
@@ -81,6 +94,15 @@ public class MainForm extends JFrame {
 	                FindProductUsecase usecase = new FindProductUsecase(presenter, data);
 	                FindProductController findProductController = new FindProductController(usecase);
 	                findProductController.execute();
+					FindProductForm findProductForm = null;
+					List<FindProductOutputDTO> findProductOutputDTOs = presenter.getFindProductOutputDTOs(); 
+					ResponeData res = presenter.getRes();
+					if(findProductOutputDTOs != null && findProductOutputDTOs.size() >0){
+						 findProductForm = new FindProductForm(findProductOutputDTOs);
+					}else{
+						JOptionPane.showMessageDialog(null, res.getMessage());
+						return;
+					}
 	        	}
 	        });
 	        menuBar.add(mnDanhSchSn);
@@ -93,7 +115,18 @@ public class MainForm extends JFrame {
 	        exitItem.addActionListener(new ActionListener() {
 	        	  @Override
 	              public void actionPerformed(ActionEvent e) {
-					System.exit(0);
+					
+					EventQueue.invokeLater(new Runnable() {
+			               public void run() {
+				            try {
+					        LoginForm frame = new LoginForm();
+					          frame.setVisible(true);
+							  dispose();
+				               } catch (Exception e) {
+					             e.printStackTrace();
+				             }
+			                 }
+		                 });
 	              }
 	        });
 	        menuBar.add(exitItem);
@@ -102,14 +135,7 @@ public class MainForm extends JFrame {
 	        JButton btnAdd = new JButton("+ Thêm sản phẩm");
 	        btnAdd.addActionListener(new ActionListener() {
 	        	public void actionPerformed(ActionEvent e) {
-					 GetAllCodeDAO data = new GetAllCodeDAO();
-                     GetAllCodePresenter presenter = new GetAllCodePresenter();
-                     GetAllCodeUsecase usecase = new GetAllCodeUsecase(data,presenter);
-                     usecase.execute("category");
-					 usecase.execute("dvt");
-	        		AddProductForm addForm = new AddProductForm(presenter.getCategory(),presenter.getDVT());
-	        		addForm.setLocationRelativeTo(null);
-	        		addForm.setVisible(true);
+					openCreateForm();
 	        	}
 	        });
 	        btnAdd.setBackground(new Color(0, 206, 209));
@@ -133,9 +159,9 @@ public class MainForm extends JFrame {
 	        txtTotal.setBounds(267, 96, 52, 32);
 	        getContentPane().add(txtTotal);
 	        txtTotal.setColumns(10);
-	        TotalQuantityDAO data = new TotalQuantityDAO();
-            TotalQuantityPresenter presenter = new TotalQuantityPresenter();
-            TotalQuantityUsecase totalQuantityUsecase = new TotalQuantityUsecase(presenter, data);
+	        TotalQuantityDAO totalData = new TotalQuantityDAO();
+            TotalQuantityPresenter totalPresenter = new TotalQuantityPresenter();
+            TotalQuantityUsecase totalQuantityUsecase = new TotalQuantityUsecase(totalPresenter, totalData);
             JComboBox cbTotal = new JComboBox();
 
             cbTotal.addActionListener(new ActionListener() {
@@ -146,8 +172,8 @@ public class MainForm extends JFrame {
                totalQuantityUsecase.execute(dto);
 
        
-        if (presenter.getOutputDTO() != null) {
-            int total = presenter.getOutputDTO().getQuantity();
+        if (totalPresenter.getOutputDTO() != null) {
+            int total = totalPresenter.getOutputDTO().getQuantity();
             txtTotal.setText(String.valueOf(total));
         } else {
             txtTotal.setText("0"); // Or some default value if needed
@@ -157,7 +183,7 @@ public class MainForm extends JFrame {
 	        cbTotal.setBounds(31, 95, 113, 32);
 	        getContentPane().add(cbTotal);
 			cbTotal.removeAllItems();
-			for (AllCode code : keyMapCategory) {
+			for (AllCode code : presentCategory.getCategory()) {
 				cbTotal.addItem(code.getKeyMap());
 			}
 	        
@@ -181,7 +207,7 @@ public class MainForm extends JFrame {
 	        btnSearch.setBounds(609, 31, 95, 32);
 	        getContentPane().add(btnSearch);
 	        
-			initializeTable(products);
+			initializeTable(presenter.getViewProductDTOs());
 	        
 	        
 	        setVisible(true);
@@ -257,21 +283,8 @@ public class MainForm extends JFrame {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
            int mamh = Integer.valueOf(String.valueOf(table.getValueAt(selectedRow, 0)));
-		   // get category, dvt
-		   GetAllCodeDAO data = new GetAllCodeDAO();
-		   GetAllCodePresenter presenter = new GetAllCodePresenter();
-		   GetAllCodeUsecase usecase = new GetAllCodeUsecase(data,presenter);
-		   usecase.execute("category");
-		   usecase.execute("dvt");
-		   //get product to delete
-		   GetOneProductPresenter present = new GetOneProductPresenter();
-           GetOneProductDAO product = new GetOneProductDAO();
-           GetOneProductUseCase productUsecase = new GetOneProductUseCase(product, present);
-           productUsecase.execute(mamh);
-
-		   UpdateProductForm form = new UpdateProductForm(presenter.getCategory(),presenter.getDVT(),present.getOutputDTO());
-		   form.setLocationRelativeTo(null);
-		   form.setVisible(true);
+		   openUpdateForm(mamh);
+		  
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm cần sửa.");
         }
@@ -291,6 +304,34 @@ public class MainForm extends JFrame {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm cần xóa.");
         }
     });
+}
+
+private void openCreateForm(){
+	GetAllCodeDAO data = new GetAllCodeDAO();
+	GetAllCodePresenter presenter = new GetAllCodePresenter();
+	GetAllCodeUsecase usecase = new GetAllCodeUsecase(data,presenter);
+	usecase.execute("category");
+	usecase.execute("dvt");
+   AddProductForm addForm = new AddProductForm(presenter.getCategory(),presenter.getDVT());
+   addForm.setLocationRelativeTo(null);
+   addForm.setVisible(true);
+}
+
+private void openUpdateForm(int mamh){
+	GetAllCodeDAO data = new GetAllCodeDAO();
+	GetAllCodePresenter presenter = new GetAllCodePresenter();
+	GetAllCodeUsecase usecase = new GetAllCodeUsecase(data,presenter);
+	usecase.execute("category");
+	usecase.execute("dvt");
+	//get product to delete
+	GetOneProductPresenter present = new GetOneProductPresenter();
+	GetOneProductDAO product = new GetOneProductDAO();
+	GetOneProductUseCase productUsecase = new GetOneProductUseCase(product, present);
+	productUsecase.execute(mamh);
+
+	UpdateProductForm form = new UpdateProductForm(presenter.getCategory(),presenter.getDVT(),present.getOutputDTO());
+	form.setLocationRelativeTo(null);
+	form.setVisible(true);
 }
  private void handleDeleteProduct() {
         int selectedRow = table.getSelectedRow();

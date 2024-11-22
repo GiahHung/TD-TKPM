@@ -10,12 +10,9 @@ public class FindProductPresenter implements FindProductOutputBoundary {
      List<FindProductOutputDTO> findProductOutputDTO = null;
      ResponeData res = null;
 
-     FindProductForm findProductForm = null;
     @Override
     public void presenter(List<FindProductOutputDTO> findProductOutputDTOs) {
         this.findProductOutputDTO = findProductOutputDTOs;
-        findProductForm = new FindProductForm(findProductOutputDTOs);
-    
     }
 
     public List<FindProductOutputDTO> getFindProductOutputDTOs() {

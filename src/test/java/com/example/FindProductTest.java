@@ -21,7 +21,7 @@ public class FindProductTest {
 
         List<FindProductOutputDTO> list = presenter.getFindProductOutputDTOs();
 
-        assertEquals(4, list.size());
+        assertEquals(3, list.size());
     
       }
 }

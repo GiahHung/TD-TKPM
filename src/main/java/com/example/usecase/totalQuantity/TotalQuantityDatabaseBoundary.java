@@ -5,6 +5,6 @@ import java.util.List;
 import com.example.entity.Product;
 
 public interface TotalQuantityDatabaseBoundary {
-    List<Product> getQuantityList(String categories);
+    int getTotalQuantity(String categories);
 
 }

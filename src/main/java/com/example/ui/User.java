@@ -32,27 +32,20 @@ import com.example.database.GetOneProductDAO;
 import com.example.database.TotalQuantityDAO;
 import com.example.database.ViewProductListDAO;
 import com.example.entity.AllCode;
-import com.example.ui.addProduct.AddProductForm;
-import com.example.ui.deleteProduct.DeleteProductController;
-import com.example.ui.deleteProduct.DeleteProductPresenter;
 import com.example.ui.findProduct.FindProductController;
 import com.example.ui.findProduct.FindProductPresenter;
 import com.example.ui.getAllCode.GetAllCodePresenter;
-import com.example.ui.getOneProduct.GetOneProductPresenter;
+import com.example.ui.login.LoginForm;
 import com.example.ui.totalQuantity.TotalQuantityPresenter;
 import com.example.ui.updateProduct.UpdateProductForm;
 import com.example.usecase.UsecaseControl;
 import com.example.usecase.ViewProductDTO;
-import com.example.usecase.deleteProduct.DeleteInputDTO;
-import com.example.usecase.deleteProduct.DeleteOutputDTO;
-import com.example.usecase.deleteProduct.DeleteUsecase;
 import com.example.usecase.findProduct.FindProductUsecase;
 import com.example.usecase.getAllCode.GetAllCodeUsecase;
-import com.example.usecase.getOneProduct.GetOneProductUseCase;
 import com.example.usecase.totalQuantity.TotalQuantityInputDTO;
 import com.example.usecase.totalQuantity.TotalQuantityUsecase;
 
-public class UserForm extends JFrame {
+public class User extends JFrame {
 
 	private static final long serialVersionUID = 1L;
     private JTextField txtSearch;
@@ -60,34 +53,17 @@ public class UserForm extends JFrame {
 	private JTextField txtTotal;
 	private DefaultTableModel tableModel;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ViewListProductPresenter presenter = new ViewListProductPresenter();
-    ViewProductListDAO data = new ViewProductListDAO();
-    UsecaseControl usecaseControl = new UsecaseControl(presenter, data);
-    ViewListProductController viewListProductController = new ViewListProductController(usecaseControl);
-    viewListProductController.execute();
-    GetAllCodeDAO dataCategory = new GetAllCodeDAO();
-    GetAllCodePresenter presentCategory = new GetAllCodePresenter();
-    GetAllCodeUsecase usecase = new GetAllCodeUsecase(dataCategory,presentCategory);
-    usecase.execute("category");
-    usecase.execute("dvt");
-        SwingUtilities.invokeLater(() -> new UserForm(presenter.getViewProductDTOs(),presentCategory.getCategory()));
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-
-	public UserForm(List<ViewProductDTO> products,List<AllCode> category) {
+	public User() {
+        ViewListProductPresenter presenter = new ViewListProductPresenter();
+		ViewProductListDAO data = new ViewProductListDAO();
+		UsecaseControl usecaseControl = new UsecaseControl(presenter, data);
+		ViewListProductController viewListProductController = new ViewListProductController(usecaseControl);
+		viewListProductController.execute();
+		GetAllCodeDAO dataCategory = new GetAllCodeDAO();
+		GetAllCodePresenter presentCategory = new GetAllCodePresenter();
+		GetAllCodeUsecase usecase = new GetAllCodeUsecase(dataCategory,presentCategory);
+		usecase.execute("category");
         // Set up main form properties
         setTitle("Clinic Management System");
         setSize(1010, 670);
@@ -120,7 +96,17 @@ public class UserForm extends JFrame {
         exitItem.addActionListener(new ActionListener() {
         	  @Override
               public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				EventQueue.invokeLater(new Runnable() {
+			               public void run() {
+				            try {
+					        LoginForm frame = new LoginForm();
+					          frame.setVisible(true);
+							  dispose();
+				               } catch (Exception e) {
+					             e.printStackTrace();
+				             }
+			                 }
+		                 });
               }
         });
         menuBar.add(exitItem);
@@ -144,9 +130,9 @@ public class UserForm extends JFrame {
         txtTotal.setBounds(267, 96, 52, 32);
         getContentPane().add(txtTotal);
         txtTotal.setColumns(10);
-        TotalQuantityDAO data = new TotalQuantityDAO();
-        TotalQuantityPresenter presenter = new TotalQuantityPresenter();
-        TotalQuantityUsecase totalQuantityUsecase = new TotalQuantityUsecase(presenter, data);
+        TotalQuantityDAO totalData = new TotalQuantityDAO();
+        TotalQuantityPresenter totalPresenter = new TotalQuantityPresenter();
+        TotalQuantityUsecase totalQuantityUsecase = new TotalQuantityUsecase(totalPresenter, totalData);
         JComboBox cbTotal = new JComboBox();
         cbTotal.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -157,8 +143,8 @@ public class UserForm extends JFrame {
     totalQuantityUsecase.execute(dto);
 
     // Check if the output DTO is not null before getting the quantity
-    if (presenter.getOutputDTO() != null) {
-        int total = presenter.getOutputDTO().getQuantity();
+    if (totalPresenter.getOutputDTO() != null) {
+        int total = totalPresenter.getOutputDTO().getQuantity();
         txtTotal.setText(String.valueOf(total));
     } else {
         txtTotal.setText("0"); // Or some default value if needed
@@ -168,7 +154,7 @@ public class UserForm extends JFrame {
         cbTotal.setBounds(31, 95, 113, 32);
         getContentPane().add(cbTotal);
 		cbTotal.removeAllItems();
-		for (AllCode code : category) {
+		for (AllCode code : presentCategory.getCategory()) {
 			cbTotal.addItem(code.getKeyMap());
 		}
         
@@ -192,7 +178,7 @@ public class UserForm extends JFrame {
         btnSearch.setBounds(609, 31, 95, 32);
         getContentPane().add(btnSearch);
         
-		initializeTable(products);
+		initializeTable(presenter.getViewProductDTOs());
         
         
         setVisible(true);

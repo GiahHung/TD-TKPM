@@ -323,7 +323,7 @@ public class UpdateProductForm extends JFrame {
         JOptionPane.showMessageDialog(this, res.getMessage());
     } else {
         JOptionPane.showMessageDialog(this, res.getMessage());
-       
+        this.dispose();
     }
 
 	}

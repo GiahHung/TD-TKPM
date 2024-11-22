@@ -15,11 +15,7 @@ public class TotalQuantityUsecase implements TotalQuantityInputBoundary {
     @Override
     public void execute(TotalQuantityInputDTO inputDTO) {
        
-        List<Product> quantityList = data.getQuantityList(inputDTO.getCategories());
-        int totalQuantity = 0;
-        for (Product product : quantityList) {
-         totalQuantity += product.getQuantity();
-        }
+        int totalQuantity = data.getTotalQuantity(inputDTO.getCategories());
         TotalQuantityOutputDTO outputDTO = new TotalQuantityOutputDTO(totalQuantity);
         output.presentTotalQuantity(outputDTO);
       }
